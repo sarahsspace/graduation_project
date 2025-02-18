@@ -2,7 +2,7 @@
 
 Privacy Policy                                       Last Updated: February 2025
 
-Icon (the app) helps users curate outfits using their wardrobe and Pinterest inspiration.
+Muse (the app) helps users curate outfits using their wardrobe and Pinterest inspiration.
 
 1. Data Collection & Storage
 User-uploaded wardrobe images are stored in Firebase for faster recommendations.
