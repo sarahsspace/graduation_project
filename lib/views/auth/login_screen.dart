@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
+import 'signup_screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -90,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 25),
 
-            // 🔥 Login Button (Now calls _handleLogin)
+            // Login Button (Now calls _handleLogin)
             ElevatedButton(
               onPressed: _handleLogin,
               child: Text("Login", style: GoogleFonts.poppins(fontSize: 16)),
@@ -126,12 +127,20 @@ class _LoginScreenState extends State<LoginScreen> {
             // Sign up link
             Center(
               child: GestureDetector(
-                onTap: () {},
-                child: Text(
-                  "Don't have an account? Sign up",
-                  style: GoogleFonts.poppins(fontSize: 14, decoration: TextDecoration.underline),
-                ),
-              ),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignupScreen()),
+    );
+  },
+  child: Text(
+    "Don't have an account? Sign up",
+    style: GoogleFonts.poppins(
+      fontSize: 14,
+      decoration: TextDecoration.underline,
+    ),
+  ),
+),
             ),
           ],
         ),
