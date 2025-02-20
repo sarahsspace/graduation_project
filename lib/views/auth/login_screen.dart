@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,7 +8,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false; // Toggle for password visibility
 
   @override
   Widget build(BuildContext context) {
@@ -20,99 +18,49 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Welcome to", 
-            style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.w500),
-                       ),
-            Text(
-              "MUSE",
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 34,
-                letterSpacing: 2,
-              ),
+            Text("Welcome to MUSEE", 
+            style: TextStyle(fontSize:28, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            Text("Log in to continue", style: GoogleFonts.poppins(fontSize: 16)),
+            SizedBox(height: 10),
+            Text("Log in to continue", style: TextStyle(fontSize:16)),
             SizedBox(height: 30),
 
             //email input
-            Text(
-              "Email",
-              style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 10),
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(45),
-                ),
-              ),
+              decoration: InputDecoration(labelText: "Email"),
               keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(height: 10),
 
             //password input
-            Text(
-              "Password",
-              style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w500),
-            ),
             TextField(
               controller: _passwordController,
-              obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(45),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                ),
-              ),
+              decoration: InputDecoration(labelText: "Password"),
+              obscureText: true,
             ),
-            SizedBox(height: 25),
+            SizedBox(height: 20),
 
             // login btn 
-             ElevatedButton(
-              onPressed: () {},
-              child: Text("Login", style: GoogleFonts.poppins(fontSize: 16)),
+            ElevatedButton(
+              onPressed:(){},
+              child: Text("Login"),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 60),
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(45),
-                ),
+                minimumSize: Size(double.infinity, 50),
               ),
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 10),
 
             //google sign in btn placeholder now
             ElevatedButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.g_translate, color: Colors.black),
-                  SizedBox(width: 10),
-                  Text("Continue with Google", style: GoogleFonts.poppins(fontSize: 16)),
-                ],
-              ),
+              onPressed:(){},
+              child: Text("Login with Google"),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 50),
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(45),
-                ),
+                backgroundColor: Colors.redAccent,
               ),
             ),
-            SizedBox(height:25),
+            SizedBox(height:20),
 
             //sign up link
             Center(
@@ -120,8 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap:() {},
                 child: Text(
                   "Dont have an account? Sign up",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
+                  style: TextStyle(
                     decoration: TextDecoration.underline,
                   ),
                 ),
