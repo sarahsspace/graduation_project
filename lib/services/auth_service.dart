@@ -12,6 +12,7 @@ class AuthService {
           await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
       User? user = userCredential.user;
+
       if (user != null) {
         // Save user details in Firestore
         await _firestore.collection('users').doc(user.uid).set({
@@ -21,7 +22,7 @@ class AuthService {
       }
       return user;
     } catch (e) {
-      print("Signup Error: $e");
+      //print("Signup Error: $e");
       return null;
     }
   }
@@ -33,7 +34,7 @@ class AuthService {
           await _auth.signInWithEmailAndPassword(email: email, password: password);
       return userCredential.user;
     } catch (e) {
-      print("Login Error: $e");
+      //print("Login Error: $e");
       return null;
     }
   }
