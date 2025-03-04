@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/pinterest_service.dart';
+import 'wardrobe_upload_screen.dart'; 
 
 class SelectBoardScreen extends StatefulWidget {
   final String accessToken; 
@@ -36,18 +37,24 @@ class _SelectBoardScreenState extends State<SelectBoardScreen> {
     }
   }
 
-  // Save selected board to local storage
+  //Save selected board to local storage
   void _saveSelectedBoard(String boardId, String boardName) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("selected_board_id", boardId);
-    await prefs.setString("selected_board_name", boardName);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString("selected_board_id", boardId);
+  await prefs.setString("selected_board_name", boardName);
 
-    _showMessage("Selected board: $boardName");
+  _showMessage("Selected board: $boardName");
 
-    // Navigate back after selection
-    if (!mounted) return;
-    Navigator.pop(context, {"id": boardId, "name": boardName});
-  }
+  if (!mounted) return;
+  
+  //Pass accessToken to WardrobeUploadScreen
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => WardrobeUploadScreen(accessToken: widget.accessToken),
+    ),
+  );
+}
 
   // Show snackbar message
   void _showMessage(String message) {
@@ -56,9 +63,11 @@ class _SelectBoardScreenState extends State<SelectBoardScreen> {
     );
   }
 
+ 
   @override
 Widget build(BuildContext context) {
   return Scaffold(
+    backgroundColor: Colors.white,
     appBar: AppBar(title: Text("Select a Pinterest Board")),
     body: _isLoading
         ? Center(child: CircularProgressIndicator())

@@ -56,6 +56,11 @@ void _handleLogin() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      backgroundColor: Colors.black, 
+      elevation: 0, 
+      toolbarHeight: 3, 
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24),
