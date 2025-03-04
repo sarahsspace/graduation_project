@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/pinterest_service.dart';
+import 'package:logger/logger.dart';
+import '../onboarding/select_board_screen.dart';
+
 
 class ConnectPinterestScreen extends StatefulWidget {
+  const ConnectPinterestScreen({super.key});
   @override
   _ConnectPinterestScreenState createState() => _ConnectPinterestScreenState();
 }
@@ -10,6 +14,7 @@ class ConnectPinterestScreen extends StatefulWidget {
 class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
   final PinterestService _pinterestService = PinterestService();
   String? _accessToken;
+  final Logger _logger = Logger();
 
   void _connectToPinterest() async {
     String? code = await _pinterestService.authenticate(context);
@@ -19,12 +24,20 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
         setState(() {
           _accessToken = token;
         });
-        print("Pinterest Access Token: $_accessToken");
+        _logger.i("Pinterest Access Token: $_accessToken"); // Log instead of print
+
+        // Navigate to board selection screen
+        if (!mounted) return; 
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SelectBoardScreen(accessToken: _accessToken!)),
+        );
+
       } else {
-        print("Failed to get access token.");
+        _logger.e("Failed to get access token."); // Error log .e
       }
     } else {
-      print("Pinterest authentication failed.");
+      _logger.w("Pinterest authentication failed."); // Warning log .w
     }
   }
 
@@ -58,14 +71,6 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
 
             ElevatedButton(
               onPressed: _connectToPinterest,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.link, color: Colors.white),
-                  SizedBox(width: 10),
-                  Text("Connect to Pinterest", style: GoogleFonts.poppins(fontSize: 16)),
-                ],
-              ),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 backgroundColor: Colors.redAccent,
@@ -73,6 +78,13 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(45),
                 ),
+              ),child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.link, color: Colors.white),
+                  SizedBox(width: 10),
+                  Text("Connect to Pinterest", style: GoogleFonts.poppins(fontSize: 16)),
+                ],
               ),
             ),
 
@@ -82,7 +94,7 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
                 "Connected to Pinterest!",
                 style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              SelectableText("Token: $_accessToken"),
+             // SelectableText("Token: $_accessToken"),
             ]
           ],
         ),
