@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/pinterest_service.dart';
 import 'wardrobe_upload_screen.dart'; 
-
+import 'connect_pinterest_screen.dart';
+import 'package:flutter/cupertino.dart';
 class SelectBoardScreen extends StatefulWidget {
   final String accessToken; 
   const SelectBoardScreen({super.key, required this.accessToken});
@@ -63,42 +64,66 @@ class _SelectBoardScreenState extends State<SelectBoardScreen> {
     );
   }
 
- 
-  @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Colors.white,
-    appBar: AppBar(title: Text("Select a Pinterest Board")),
-    body: _isLoading
-        ? Center(child: CircularProgressIndicator())
-        : Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Text(
-                  "Choose a board for outfit recommendations",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 10),
-                Expanded( // Makes listView scrollable
-                  child: ListView.builder(
-                    itemCount: _boards.length,
-                    itemBuilder: (context, index) {
-                      final board = _boards[index];
-                      return ListTile(
-                        title: Text(board["name"]),
-                        subtitle: Text("Pins: ${board["pin_count"] ?? 'Unknown'}"),
-                        trailing: Icon(Icons.arrow_forward_ios),
-                        onTap: () => _saveSelectedBoard(board["id"], board["name"]),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-  );
-}
+  void _goBackToPinterestAuth() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const ConnectPinterestScreen()),
+    );
+  }
 
+ @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar:  AppBar(
+        title: const Text(
+          "Select a Pinterest Board",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
+        elevation: 0,
+        toolbarHeight: 50,
+        leading: IconButton(
+          icon: const Icon(CupertinoIcons.back, color: Colors.white, size: 26),
+          onPressed: _goBackToPinterestAuth,
+        ),
+      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator(color: Colors.white))
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    "Choose a board for outfit recommendations",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _boards.length,
+                      itemBuilder: (context, index) {
+                        final board = _boards[index];
+                        return Card(
+                          color: Colors.grey[900],
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          child: ListTile(
+                            title: Text(board["name"], style: TextStyle(color: Colors.white)),
+                            subtitle: Text(
+                              "Pins: ${board["pin_count"] ?? 'Unknown'}",
+                              style: TextStyle(color: Colors.grey[400]),
+                            ),
+                            trailing: Icon(Icons.arrow_forward_ios, color: Colors.white70, size: 16),
+                            onTap: () => _saveSelectedBoard(board["id"], board["name"]),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
 }

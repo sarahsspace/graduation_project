@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+//import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'package:logger/logger.dart';
+import '../views/auth/pinterest_login.dart';
+
 
 class PinterestService {
   final String clientId = dotenv.env['PINTEREST_CLIENT_ID'] ?? "MISSING_CLIENT_ID";
@@ -20,17 +22,21 @@ class PinterestService {
       
   // Authenticate user through WebView
   Future<String?> authenticate(BuildContext context) async {
-    String? authCode = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => PinterestLoginWebView(authUrl: authUrl)),
-    );
+  final authCode = await Navigator.push<String>(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PinterestLogin(authUrl: authUrl),
+    ),
+  );
 
-    if (authCode == null) {
-      _logger.w("User cancelled login");
-      return null;
-    }
-    return authCode;
+  if (authCode == null) {
+    _logger.w("User cancelled Pinterest login.");
+    return null;
   }
+
+  _logger.i("Auth code received: $authCode");
+  return authCode;
+}
 
   // Exchange authorization code for access token
   Future<String?> exchangeCodeForToken(String code) async {
@@ -109,57 +115,4 @@ class PinterestService {
 
 }
 
-// WebView for Pinterest login
-class PinterestLoginWebView extends StatefulWidget {
-  final String authUrl;
-  const PinterestLoginWebView({super.key, required this.authUrl});
 
-  @override
-  _PinterestLoginWebViewState createState() => _PinterestLoginWebViewState();
-}
-
-class _PinterestLoginWebViewState extends State<PinterestLoginWebView> {
-  late WebViewController _controller;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageFinished: (String url) {
-            setState(() {
-              _isLoading = false;
-            });
-          },
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith(dotenv.env['PINTEREST_REDIRECT_URI']!)) {
-              Uri uri = Uri.parse(request.url);
-              String? code = uri.queryParameters['code'];
-
-              // Close WebView and return auth code
-              Navigator.pop(context, code);
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.authUrl));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Pinterest Login")),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (_isLoading) Center(child: CircularProgressIndicator()),
-        ],
-      ),
-    );
-  }
-}

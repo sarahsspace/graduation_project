@@ -121,23 +121,42 @@ void _handleLogin() async {
             SizedBox(height: 15),
 
             // Google Sign-In Placeholder
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.g_translate, color: Colors.black),
-                  SizedBox(width: 10),
-                  Text("Continue with Google", style: GoogleFonts.poppins(fontSize: 16)),
-                ],
-              ),
-            ),
+           ElevatedButton(
+  onPressed: () async {
+    AuthService authService = AuthService();
+    User? user = await authService.signInWithGoogle();
+
+    if (user != null) {
+      print("Google Sign-In Successful: ${user.displayName}");
+     if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ConnectPinterestScreen()),
+      );
+    } else {
+      print("Google Sign-In Failed");
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    minimumSize: Size(double.infinity, 50),
+    backgroundColor: Colors.white,
+    foregroundColor: Colors.black,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
+  ),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Image.asset(
+        'assets/googleLogo.jpg',
+        width: 30,  
+        height: 30,
+      ),
+      SizedBox(width: 10),
+      Text("Continue with Google", style: GoogleFonts.poppins(fontSize: 16)),
+    ],
+  ),
+),
+
             SizedBox(height: 25),
 
             // Sign up link

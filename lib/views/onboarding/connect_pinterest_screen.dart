@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:graduation_project/services/auth_service.dart';
 import '../../services/pinterest_service.dart';
 import 'package:logger/logger.dart';
 import '../onboarding/select_board_screen.dart';
+import '../auth/login_screen.dart';
 
 class ConnectPinterestScreen extends StatefulWidget {
   const ConnectPinterestScreen({super.key});
@@ -54,11 +56,12 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
 
           // Main Content
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 44),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(height: 30),
                 Text(
                   "Welcome to",
                   style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.w500, color: Colors.white),
@@ -79,7 +82,7 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
                   width: 80,
                   height: 80,
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 50),
 
                 ElevatedButton(
                   onPressed: _connectToPinterest,
@@ -100,7 +103,26 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
                     ],
                   ),
                 ),
-
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () async {
+                    final authService = AuthService();
+                    await authService.logout();
+                    if (!context.mounted) return;
+                    Navigator.pushReplacement(
+                      context, 
+                      MaterialPageRoute(builder: (context) => LoginScreen()), 
+                      );
+                  },child:
+                  Text("Not your account? Log out",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(fontSize: 16, 
+                      color: Colors.white.withOpacity(0.9),
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.white),
+                ),
+                ),
+                
                 if (_accessToken != null) ...[
                   const SizedBox(height: 20),
                   Text(

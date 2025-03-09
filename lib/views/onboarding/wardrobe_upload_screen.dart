@@ -62,7 +62,7 @@ class WardrobeUploadScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(1),
+                     color: Color(0xFFEAEAEA).withOpacity(0.3), 
                       borderRadius: BorderRadius.circular(30),
                       backgroundBlendMode: BlendMode.overlay,
                     ),
@@ -140,8 +140,8 @@ class WardrobeUploadScreen extends StatelessWidget {
             top: 50,
             left: 20,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
-              onPressed: () => _clearSavedBoardAndGoBack(context),
+             icon: const Icon(CupertinoIcons.back, color: Colors.black, size: 30),
+            onPressed: () => _clearSavedBoardAndGoBack(context),
             ),
           ),
         ],

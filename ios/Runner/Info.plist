@@ -51,13 +51,17 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>museapp</string> 
+				<string>com.googleusercontent.apps.192168870590-o5v0hclpqed0r8g0980ulaos6c59s616</string> 
 			</array>
 		</dict>
 	</array>
+	<key>GIDClientID</key>
+	<string>192168870590-o5v0hclpqed0r8g0980ulaos6c59s616.apps.googleusercontent.com</string>
 
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>pinterest</string>
 	</array>
+
 </dict>
 </plist>
