@@ -30,16 +30,18 @@ class AuthService {
   }
 
   // Login w email & password
-  Future<User?> login(String email, String password) async {
-    try {
-      UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return userCredential.user;
-    } catch (e) {
-      //print("Login Error: $e");
-      return null;
-    }
+ Future<User?> login(String email, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential.user;
+  } on FirebaseAuthException catch (e) {
+    print("Firebase Auth Error: ${e.code}");
+    return null;
   }
+}
 
   // Login w google
   Future<User?> signInWithGoogle() async {

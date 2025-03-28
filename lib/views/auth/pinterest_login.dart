@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:webview_flutter/webview_flutter.dart'; // Import for clearing cookies
 
 class PinterestLogin extends StatefulWidget {
   final String authUrl;
@@ -17,6 +18,7 @@ class _PinterestLoginState extends State<PinterestLogin> {
   @override
   void initState() {
     super.initState();
+    _clearCookies(); // Clears previous session cookies
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -42,6 +44,13 @@ class _PinterestLoginState extends State<PinterestLogin> {
       ..loadRequest(Uri.parse(widget.authUrl));
   }
 
+  // Function to clear cookies before authentication
+  Future<void> _clearCookies() async {
+    final cookieManager = WebViewCookieManager(); // Flutter's WebView Cookie Manager
+    await cookieManager.clearCookies();
+    debugPrint("WebView cookies cleared"); // Debug message
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,8 +66,7 @@ class _PinterestLoginState extends State<PinterestLogin> {
       body: Stack(
         children: [
           WebViewWidget(controller: _controller),
-          if (_isLoading)
-            const Center(child: CircularProgressIndicator()),
+          if (_isLoading) const Center(child: CircularProgressIndicator()),
         ],
       ),
     );

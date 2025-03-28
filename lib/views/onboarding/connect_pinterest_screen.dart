@@ -18,28 +18,29 @@ class _ConnectPinterestScreenState extends State<ConnectPinterestScreen> {
   final Logger _logger = Logger();
 
   void _connectToPinterest() async {
-    String? code = await _pinterestService.authenticate(context);
-    if (code != null) {
-      String? token = await _pinterestService.exchangeCodeForToken(code);
-      if (token != null) {
-        setState(() {
-          _accessToken = token;
-        });
-        _logger.i("Pinterest Access Token: $_accessToken"); // Log instead of print
+  String? code = await _pinterestService.authenticate(context);
 
-        // Navigate to board selection screen
-        if (!mounted) return;
-        Navigator.pushReplacement(
+  if (code != null) {
+    String? token = await _pinterestService.exchangeCodeForToken(code);
+
+    if (token != null) {
+      setState(() {
+        _accessToken = token;
+      });
+
+      if (!mounted) return;
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SelectBoardScreen(accessToken: _accessToken!)),
+        MaterialPageRoute(builder: (context) => SelectBoardScreen(accessToken: token)),
       );
-      } else {
-        _logger.e("Failed to get access token."); // Error log .e
-      }
     } else {
-      _logger.w("Pinterest authentication failed."); // Warning log .w
+      _logger.e("Failed to get access token.");
     }
+  } else {
+    _logger.w("Pinterest authentication failed.");
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
