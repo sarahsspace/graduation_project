@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
 
 class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
@@ -29,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
       _isLoading = false;
     });
 
+    if (!mounted) return; 
     if (user != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Signup successful! Welcome ${user.email}")),
@@ -94,16 +96,15 @@ class _SignupScreenState extends State<SignupScreen> {
 
             // Signup Button
             ElevatedButton(
-              onPressed: _isLoading ? null : _signup,
-              child: _isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
-                  : Text("Sign Up", style: GoogleFonts.poppins(fontSize: 16)),
+              onPressed: _isLoading ? null : _signup,    
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
-              ),
+              ),  child: _isLoading
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text("Sign Up", style: GoogleFonts.poppins(fontSize: 16)),
             ),
             SizedBox(height: 15),
 
