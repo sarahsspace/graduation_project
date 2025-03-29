@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:webview_flutter/webview_flutter.dart'; // Import for clearing cookies
 
 class PinterestLogin extends StatefulWidget {
   final String authUrl;
