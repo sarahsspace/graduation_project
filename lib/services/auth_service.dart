@@ -1,17 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Sign up with email & password
+  // Sign up w email & password
    Future<User?> signUp(String email, String password) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
       User? user = userCredential.user;
+
       if (user != null) {
         // Save user details in Firestore
         await _firestore.collection('users').doc(user.uid).set({
@@ -21,19 +24,46 @@ class AuthService {
       }
       return user;
     } catch (e) {
-      print("Signup Error: $e");
+      //print("Signup Error: $e");
       return null;
     }
   }
 
-  // Login with email & password
-  Future<User?> login(String email, String password) async {
+  // Login w email & password
+ Future<User?> login(String email, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential.user;
+  } on FirebaseAuthException catch (e) {
+    print("Firebase Auth Error: ${e.code}");
+    return null;
+  }
+}
+
+  // Login w google
+  Future<User?> signInWithGoogle() async {
     try {
-      UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        print("Google sign-in canceled.");
+        return null; // User canceled sign-in
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
       return userCredential.user;
     } catch (e) {
-      print("Login Error: $e");
+     print("Google Sign-In Error: $e");
       return null;
     }
   }
@@ -41,6 +71,7 @@ class AuthService {
   // Logout
   Future<void> logout() async {
     await _auth.signOut();
+    await _googleSignIn.signOut();
   }
 
   // Get current user
